@@ -1,0 +1,59 @@
+# Server Config
+server:
+    port: 8765
+
+#Eureka  Config
+eureka:
+    client:
+        fetch-registry: true
+        register-with-eureka: true
+        service-url:
+            defaultZone: http://localhost:8761/eureka/
+            instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+
+# Application Config
+spring:
+    application:
+        name: ms-gateway
+    jmx:
+        enabled: false
+    cloud:
+        gateway:
+            dicovery:
+                locator:
+                    enabled: true
+                    lower-case-service-id: true
+            routes:
+                - id: ms-clients
+                  uri: lb://ms-clients/
+                  predicates:
+                  - Path=/clients/**
+                  #===============================
+                - id: hr-api-gateway
+                  uri: lb://hr-api-gateway
+                  predicates:
+                  - Path=/v3/api-docs/**
+                  filters:
+                  - RewritePath=/v3/api-docs/(?<path>.*), /$\{path}/v3/api-docs
+
+# Management
+management:
+    endpoints:
+        web:
+            exposure:
+                include: '*'
+
+logging:
+    level:
+        org:
+            springframework:
+                cloud:
+                    gateway: TRACE
+                    http:
+                        server:
+                            reactive: DEBUG
+                    web:
+                        reactive: DEBUG
+        reactor:
+            ipc:
+                netty: DEBUG

@@ -1,0 +1,43 @@
+# Server Config
+server:
+    port: 0
+
+# Application Config
+spring:
+    application:
+        name: ms-clients
+    datasource:
+        username: sa
+        password:
+    h2:
+        console:
+            enabled: true
+            path: /h2-console
+            settings:
+                web-allow-others: true
+    jpa:
+        hibernate:
+            ddl-auto: update
+            defer-datasource-initialization: true
+            database-platform: org.hibernate.dialect.H2Dialect
+            properties:
+                hibernate:
+                    show_sql: true
+                    format_sql: true
+    mvc:
+        pathmatch:
+            matching-strategy: ant-path-matcher
+
+# Eureka
+eureka:
+    client:
+        service-url:
+            defaultZone: http://localhost:8761/eureka/
+            instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+
+# Management Config
+management:
+    endpoints:
+        web:
+            exposure:
+                include: '*'
