@@ -12,7 +12,7 @@ eureka:
 # Application Config
 spring:
     application:
-        name: ms-clients
+        name: ms-cards
     datasource:
         username: sa
         password:

@@ -1,16 +1,16 @@
-package com.mscourse.clients.module;
+package com.mscourse.cards.module;
 
+
+import java.math.BigDecimal;
 import java.net.URI;
 import java.util.List;
-
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,24 +21,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.mscourse.clients.module.model.entities.Client;
+import com.mscourse.cards.module.model.entities.Card;
 
 import jakarta.validation.Valid;
 
-
 @RestController
-@RequestMapping(value = "/clients")
-public class ClientsController {
+@RequestMapping(value = "/cards")
+public class CardsController {
 
-    private Logger logger = LoggerFactory.getLogger(ClientsController.class.getName());
+    private Logger logger = LoggerFactory.getLogger(CardsController.class.getName());
 
     @Autowired
-    private ClientsService service;
+    private CardsService service;
     
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Client> save(@RequestBody @Valid Client client) {
+    public ResponseEntity<Card> save(@RequestBody @Valid Card client) {
 
         logger.info("Save Client API Accessed!");
 
@@ -57,54 +57,70 @@ public class ClientsController {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.FOUND)
-    public ResponseEntity<List<Client>> getClients() {
+    public ResponseEntity<List<Card>> getCards() {
 
         logger.info("Get Client List API Accessed!");
 
         try {
 
-            return ResponseEntity.ok().body(this.service.getClients());
+            return ResponseEntity.ok().body(this.service.getCards());
 
         } catch(Exception e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
 
-    @GetMapping(value = "/{cpf}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.FOUND)
-    public ResponseEntity<Client> getClient(@PathVariable String cpf) {
+    public ResponseEntity<Card> getCard(@PathVariable Integer id) {
 
         logger.info("Consult Client API Accessed!");
 
         try {
 
-            return ResponseEntity.ok().body(this.service.getClient(cpf));
+            return ResponseEntity.ok().body(this.service.getCard(id));
 
         } catch(Exception e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
 
-    @PutMapping(value = "/{cpf}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Client> update(@PathVariable String cpf, @RequestBody @Valid Client updatedClient) {
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.FOUND)
+    public ResponseEntity<Card> getCardByRent(@PathVariable Float rent) {
 
-        logger.info("Update Client API Accessed!");
+        logger.info("Consult Card by Rent API Accessed!");
+
+        try {
+
+            BigDecimal value = new BigDecimal(Float.toString(rent));
+            return ResponseEntity.ok().body(this.service.getCardByRent(value));
+
+        } catch(Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+    }
+
+    @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Card> update(@PathVariable Integer id, @RequestBody @Valid Card updatedCard) {
+
+        logger.info("Update Card API Accessed!");
         
         try {
-            this.service.update(cpf, updatedClient);
-            return ResponseEntity.ok().body(updatedClient);
+            this.service.update(id, updatedCard);
+            return ResponseEntity.ok().body(updatedCard);
         } catch(Exception e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
 
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> delete(@PathVariable String cpf) {
+    public ResponseEntity<Void> delete(@PathVariable Integer id) {
 
-        logger.info("Delete Client API Accessed!");
+        logger.info("Delete Card API Accessed!");
 
         try{
-            this.service.delete(cpf);
+            this.service.delete(id);
             return ResponseEntity.ok().build();
         } catch(Exception e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());

@@ -1,21 +1,21 @@
-package com.mscourse.clients.module.model.entities;
+package com.mscourse.cards.module.model.entities;
 
-import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.OneToMany;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.data.annotation.PersistenceCreator;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.mscourse.cards.module.model.classes.Auditable;
+
 import jakarta.persistence.Column;
 
-import com.mscourse.clients.module.model.classes.Auditable;
 
-@Entity
-@Table(name = "clients")
 public class Client extends Auditable {
     
     //Properties
@@ -32,10 +32,15 @@ public class Client extends Auditable {
     @Column(nullable = false, length = 200)
     private Integer age;
 
+    @OneToMany(mappedBy = "client")
+    @JsonManagedReference
+    private List<Card> cards;
+
 
     //Constructors
     @PersistenceCreator
     public Client(String cpf, String name, Integer age) {
+        super();
         setCpf(cpf);
         setName(name);
         setAge(age);
@@ -61,3 +66,4 @@ public class Client extends Auditable {
     public void setName(String name) { this.name = name; }
     public void setAge(Integer age) { this.age = age; }
 }
+
