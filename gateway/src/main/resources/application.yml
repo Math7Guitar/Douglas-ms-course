@@ -28,9 +28,19 @@ spring:
                   uri: lb://ms-clients/
                   predicates:
                   - Path=/clients/**
-                  #===============================
-                - id: hr-api-gateway
-                  uri: lb://hr-api-gateway
+                #===============================
+                - id: ms-clients
+                  uri: lb://ms-cards/
+                  predicates:
+                  - Path=/cards/**
+                #===============================
+                - id: ms-credit-evaluator
+                  uri: lb://ms-credit-evaluator/
+                  predicates:
+                  - Path=/ce/**
+                #===============================
+                - id: api-gateway
+                  uri: lb://api-gateway
                   predicates:
                   - Path=/v3/api-docs/**
                   filters:

@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 
 import org.springframework.data.annotation.PersistenceCreator;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.mscourse.cards.module.model.classes.Auditable;
 import com.mscourse.cards.module.model.enumerated.CardFlag;
 
@@ -13,49 +12,44 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "cards")
 public class Card extends Auditable {
-    
+
     //Properties
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column
+    @Column(nullable = false)
     private String name; 
     
+    @Column(nullable = true)
     @Enumerated(EnumType.STRING)
     private CardFlag flag;
     
-    @Column
+    @Column(nullable = false)
     private BigDecimal rent;
     
-    @Column
-    private BigDecimal limit;
+    @Column(nullable = false)
+    private BigDecimal cardlimit;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_client", nullable = false)
-    @JsonBackReference
-    private Client client;
+    @Column(nullable = false)
+    private String client;
 
 
     //Constructors
     @PersistenceCreator
-    public Card(String name, CardFlag flag, BigDecimal rent, BigDecimal limit, Client client) {
-        super();
+    public Card(String name, CardFlag flag, Float rent, Float limit, String client) {
         setName(name);
         setFlag(flag);
-        setRent(rent);
-        setLimit(limit);
+        setRent(BigDecimal.valueOf(rent));
+        setLimit(BigDecimal.valueOf(limit));
         setClient(client);
         setCreatedBy("Douglas ms-course");
         setCreationDate(LocalDateTime.now());
@@ -71,8 +65,8 @@ public class Card extends Auditable {
     public String getName() { return this.name; }
     public CardFlag getFlag() { return this.flag; }
     public BigDecimal getRent() { return this.rent; }
-    public BigDecimal getLimit() { return this.limit; }
-    public Client getClient() { return this.client; }
+    public BigDecimal getLimit() { return this.cardlimit; }
+    public String getClient() { return this.client; }
     
     
     //Setters
@@ -80,6 +74,7 @@ public class Card extends Auditable {
     public void setName(String name) { this.name = name; }
     public void setFlag(CardFlag flag) { this.flag = flag; }
     public void setRent(BigDecimal rent) { this.rent = rent; }
-    public void setLimit(BigDecimal limit) { this.limit = limit; }
-    public void setClient(Client client) { this.client = client; }
+    public void setLimit(BigDecimal limit) { this.cardlimit = limit; }
+    public void setClient(String client) { this.client = client; }
+    
 }

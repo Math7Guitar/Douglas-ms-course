@@ -1,6 +1,6 @@
 # Server Config
 server:
-    port: 0
+    port: ${PORT:0}
 
 # Application Config
 spring:
@@ -9,6 +9,7 @@ spring:
     datasource:
         username: sa
         password:
+        driverClassName: org.h2.Driver
     h2:
         console:
             enabled: true
@@ -28,7 +29,7 @@ spring:
         pathmatch:
             matching-strategy: ant-path-matcher
 
-# Eureka
+# Eureka Config
 eureka:
     client:
         service-url:

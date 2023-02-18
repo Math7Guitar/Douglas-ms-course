@@ -8,6 +8,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +27,7 @@ import com.mscourse.clients.module.model.entities.Client;
 
 import jakarta.validation.Valid;
 
-
+@RefreshScope
 @RestController
 @RequestMapping(value = "/clients")
 public class ClientsController {
@@ -43,6 +44,8 @@ public class ClientsController {
         logger.info("Save Client API Accessed!");
 
         try {
+
+            client.setCpf(client.getCpf().replace(".", "").replace("-", ""));
 
             this.service.save(client);
             URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(client.getId()).toUri();
@@ -78,7 +81,7 @@ public class ClientsController {
 
         try {
 
-            return ResponseEntity.ok().body(this.service.getClient(cpf));
+            return ResponseEntity.ok().body(this.service.getClient(cpf.replace(".", "").replace("-", "")));
 
         } catch(Exception e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
@@ -98,7 +101,7 @@ public class ClientsController {
         }
     }
 
-    @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "/{cpf}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> delete(@PathVariable String cpf) {
 
         logger.info("Delete Client API Accessed!");

@@ -11,11 +11,10 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public abstract class Auditable {
-
+public class Auditable {
+    
     //Properties
     @CreatedBy
     private String createdBy;
@@ -42,5 +41,4 @@ public abstract class Auditable {
     public void setCreationDate(LocalDateTime creationDate) { this.creationDate = creationDate; }
     public void setLastModifiedBy(String lastModifiedBy) { this.lastModifiedBy = lastModifiedBy; }
     public void setLastModifiedDate(LocalDateTime lastModifiedDate) { this.lastModifiedDate = lastModifiedDate; }
-    
 }

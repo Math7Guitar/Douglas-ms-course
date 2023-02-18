@@ -1,13 +1,13 @@
 package com.mscourse.cards.module;
 
-
-import java.math.BigDecimal;
+//import java.math.BigDecimal;
 import java.net.URI;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
@@ -28,6 +28,7 @@ import com.mscourse.cards.module.model.entities.Card;
 import jakarta.validation.Valid;
 
 @RestController
+@RefreshScope
 @RequestMapping(value = "/cards")
 public class CardsController {
 
@@ -38,15 +39,15 @@ public class CardsController {
     
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Card> save(@RequestBody @Valid Card client) {
+    public ResponseEntity<Card> save(@RequestBody @Valid Card card) {
 
-        logger.info("Save Client API Accessed!");
+        logger.info("Save Card API Accessed!");
 
         try {
 
-            this.service.save(client);
-            URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(client.getId()).toUri();
-            return ResponseEntity.created(uri).body(client);
+            this.service.save(card);
+            URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(card.getId()).toUri();
+            return ResponseEntity.created(uri).body(card);
 
         } catch(Exception e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
@@ -59,7 +60,7 @@ public class CardsController {
     @ResponseStatus(HttpStatus.FOUND)
     public ResponseEntity<List<Card>> getCards() {
 
-        logger.info("Get Client List API Accessed!");
+        logger.info("Get Card List API Accessed!");
 
         try {
 
@@ -74,7 +75,7 @@ public class CardsController {
     @ResponseStatus(HttpStatus.FOUND)
     public ResponseEntity<Card> getCard(@PathVariable Integer id) {
 
-        logger.info("Consult Client API Accessed!");
+        logger.info("Consult Card API Accessed!");
 
         try {
 
@@ -85,16 +86,31 @@ public class CardsController {
         }
     }
 
-    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    /*@GetMapping(value = "/{rent}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.FOUND)
-    public ResponseEntity<Card> getCardByRent(@PathVariable Float rent) {
+    public ResponseEntity<List<Card>> getCardsByRent(@PathVariable Float rent) {
 
         logger.info("Consult Card by Rent API Accessed!");
 
         try {
 
-            BigDecimal value = new BigDecimal(Float.toString(rent));
+            BigDecimal value = new BigDecimal(rent);
             return ResponseEntity.ok().body(this.service.getCardByRent(value));
+
+        } catch(Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+    }*/
+
+    @GetMapping(value = "/client/{cpf}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.FOUND)
+    public ResponseEntity<List<Card>> getCardsByClient(@PathVariable String cpf) {
+
+        logger.info("Consult Card by Client API Accessed!");
+
+        try {
+
+            return ResponseEntity.ok().body(this.service.getCardByClient(cpf));
 
         } catch(Exception e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
@@ -114,7 +130,7 @@ public class CardsController {
         }
     }
 
-    @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
 
         logger.info("Delete Card API Accessed!");

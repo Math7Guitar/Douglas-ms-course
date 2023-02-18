@@ -1,6 +1,6 @@
 package com.mscourse.cards.module;
 
-import java.math.BigDecimal;
+//import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,24 +12,31 @@ import com.mscourse.cards.module.model.entities.Card;
 
 @Service
 public class CardsService {
-    
     @Autowired
     private CardsRepository repository;
 
-    public Card save(Card client) {
-        return this.repository.save(client);
+    public Card save(Card card) {
+        return this.repository.save(card);
     }
 
     public Card getCard(Integer id) {
         return this.repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Card not found!"));
     }
 
-    public Card getCardByRent(BigDecimal rent) {
-        return this.repository.findByRentLessThanEqual(rent).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Card not found!"));
+    /*public List<Card> getCardByRent(BigDecimal rent) {
+        return this.repository.findByRentLessThanEqual(rent).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Card list not found!"));
+    }*/
+
+    public List<Card> getCardByClient(String client) {
+        return this.repository.findByClient(client).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Card list not found!"));
     }
 
     public List<Card> getCards() {
         return this.repository.findAll();
+    }
+
+    public void attachCard() {
+
     }
 
     public Card update(Integer id, Card updatedClient) {
