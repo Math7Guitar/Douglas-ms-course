@@ -2,7 +2,7 @@ package com.mscourse.creditevaluator.module.model.classes;
 
 import java.math.BigDecimal;
 
-import com.mscourse.creditevaluator.module.enumerated.CardFlag;
+import com.mscourse.creditevaluator.module.model.enumerated.CardFlag;
 
 
 public class Card {

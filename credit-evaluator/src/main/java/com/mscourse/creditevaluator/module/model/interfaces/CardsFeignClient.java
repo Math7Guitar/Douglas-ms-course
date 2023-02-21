@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.mscourse.creditevaluator.module.model.classes.Card;
@@ -23,5 +24,9 @@ public interface CardsFeignClient {
     @GetMapping(value = "/client/{cpf}")
     @ResponseStatus(HttpStatus.FOUND)
     public ResponseEntity<List<Card>> getCardsByClient(@PathVariable String cpf);
+
+    @GetMapping(value = "/{rent}")
+    @ResponseStatus(HttpStatus.FOUND)
+    public ResponseEntity<List<Card>> getCardsByRent(@PathVariable Float rent, @RequestParam String cpf);
     
 }

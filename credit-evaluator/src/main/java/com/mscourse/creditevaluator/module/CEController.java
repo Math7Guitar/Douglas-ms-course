@@ -1,5 +1,7 @@
 package com.mscourse.creditevaluator.module;
 
+import java.util.List;
+
 import java.net.URI;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.slf4j.Logger;
@@ -21,8 +23,11 @@ import com.mscourse.creditevaluator.exception.ClientStatusNotFoundException;
 import com.mscourse.creditevaluator.exception.MicroServicesComunicationException;
 import com.mscourse.creditevaluator.module.model.classes.EvaluationResponse;
 import com.mscourse.creditevaluator.module.model.classes.EvaluationRequest;
-
+import com.mscourse.creditevaluator.module.model.classes.CardIssuanceData;
 import com.mscourse.creditevaluator.module.model.classes.ClientStatus;
+import com.mscourse.creditevaluator.module.model.classes.CardRequestProtocol;
+
+import com.mscourse.creditevaluator.exception.CardRequestException;
 
 @RestController
 @RefreshScope
@@ -53,7 +58,7 @@ public class CEController {
 
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<EvaluationResponse> getEvaluation(@RequestBody EvaluationRequest data) {
+    public ResponseEntity<List<EvaluationResponse>> getEvaluation(@RequestBody EvaluationRequest data) {
 
         try{
 
@@ -64,6 +69,19 @@ public class CEController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         } catch(ClientStatusNotFoundException e) {
             return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping("/card-request")
+    public ResponseEntity cardRequest(@RequestBody CardIssuanceData data) {
+
+        try {
+
+            CardRequestProtocol protocol = this.service.cardIssuanceRequest(data);
+            return ResponseEntity.ok(protocol);
+
+        } catch(CardRequestException e) {
+            return ResponseEntity.internalServerError().body(e.getMessage());
         }
     }
 }

@@ -1,17 +1,18 @@
 package com.mscourse.cards.module;
 
-//import java.math.BigDecimal;
+import java.math.BigDecimal;
 import java.util.List;
-
+import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
-
 import com.mscourse.cards.module.model.entities.Card;
+import com.mscourse.cards.module.repositories.CardsRepository;
 
 @Service
 public class CardsService {
+
     @Autowired
     private CardsRepository repository;
 
@@ -23,9 +24,16 @@ public class CardsService {
         return this.repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Card not found!"));
     }
 
-    /*public List<Card> getCardByRent(BigDecimal rent) {
-        return this.repository.findByRentLessThanEqual(rent).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Card list not found!"));
-    }*/
+    public List<Card> getCardByRent(BigDecimal rent, String cpf) {
+        List<Card> cards = this.repository.findByRentLessThanEqual(rent).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Card list not found!"));
+        List<Card> cardsList = new ArrayList<>();
+        for(Card card: cards) {
+            if(card.getClient().equals(cpf)) {
+                cardsList.add(card);
+            }
+        }
+        return cardsList;
+    }
 
     public List<Card> getCardByClient(String client) {
         return this.repository.findByClient(client).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Card list not found!"));

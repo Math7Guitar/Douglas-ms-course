@@ -1,6 +1,6 @@
 package com.mscourse.cards.module;
 
-//import java.math.BigDecimal;
+import java.math.BigDecimal;
 import java.net.URI;
 import java.util.List;
 
@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
@@ -86,21 +87,21 @@ public class CardsController {
         }
     }
 
-    /*@GetMapping(value = "/{rent}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{rent}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.FOUND)
-    public ResponseEntity<List<Card>> getCardsByRent(@PathVariable Float rent) {
+    public ResponseEntity<List<Card>> getCardsByRent(@PathVariable Float rent, @RequestParam String cpf) {
 
         logger.info("Consult Card by Rent API Accessed!");
 
         try {
 
             BigDecimal value = new BigDecimal(rent);
-            return ResponseEntity.ok().body(this.service.getCardByRent(value));
+            return ResponseEntity.ok().body(this.service.getCardByRent(value, cpf));
 
         } catch(Exception e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
-    }*/
+    }
 
     @GetMapping(value = "/client/{cpf}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.FOUND)
